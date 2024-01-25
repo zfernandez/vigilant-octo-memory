@@ -14,4 +14,8 @@ public class Dice {
     public int roll() {
         return random.ints(1, 1, size + 1).toArray()[0];
     }
+
+    public int size() {
+        return size;
+    }
 }
