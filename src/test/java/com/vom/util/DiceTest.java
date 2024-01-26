@@ -1,4 +1,4 @@
-package com.vom.dice;
+package com.vom.util;
 
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;

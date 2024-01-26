@@ -1,4 +1,4 @@
-package com.vom.dice;
+package com.vom.util;
 
 import java.util.Random;
 

@@ -1,6 +1,6 @@
 package com.vom;
 
-import com.vom.dice.Dice;
+import com.vom.util.Dice;
 
 import javax.swing.*;
 import java.awt.*;
