@@ -27,6 +27,7 @@ public class Window implements Draggable {
 
         JTextArea logTextArea = new JTextArea(5, 20);
         logTextArea.setEditable(false);
+        logTextArea.setLineWrap(true);
         JScrollPane logScrollPane = new JScrollPane(
             logTextArea,
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -35,7 +36,7 @@ public class Window implements Draggable {
 
         JTextField inputTextField = new JTextField(20);
         inputTextField.addActionListener(e -> {
-            logTextArea.append("Rolled: " + diceRoller.diceRoll(inputTextField.getText()) + "\n");
+            logTextArea.append(diceRoller.diceRoll(inputTextField.getText()) + "\n");
             inputTextField.setText("");
         });
 
@@ -124,7 +125,7 @@ public class Window implements Draggable {
 
     private static JButton getDiceButton(JTextArea logTextArea, DiceRoller diceRoller, String diceText) {
         JButton button = new JButton(diceText);
-        button.addActionListener(e -> logTextArea.append("Rolled: " + diceRoller.diceRoll(button.getText()) + "\n"));
+        button.addActionListener(e -> logTextArea.append(diceRoller.diceRoll(button.getText()) + "\n"));
         return button;
     }
 

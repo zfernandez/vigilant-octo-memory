@@ -5,10 +5,11 @@ import org.junit.jupiter.api.TestFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DiceRollerTest {
     @TestFactory
@@ -20,30 +21,40 @@ public class DiceRollerTest {
             "d1",
             "d0"
         );
+        List<String> outputRegexList = Arrays.asList(
+            "Rolled: d20 = ([\\d]+) = ([\\d]+)",
+            "Rolled: d4 = ([\\d]+) = ([\\d]+)",
+            "Rolled: d6 = ([\\d]+) = ([\\d]+)",
+            "Rolled: d1 = ([\\d]+) = ([\\d]+)",
+            "Dice must be positive: d0"
+        );
 
-        Stream<DynamicTest> rollNumberStream = inputList.stream()
+        return inputList.stream()
             .map(dice -> DynamicTest.dynamicTest(
                 "rollNumber: " + dice,
                 () -> {
                     DiceRoller roller = new DiceRoller();
                     String result = roller.diceRoll(dice);
-                    System.out.println("Rolled: " + result);
-                    assertFalse(result.isEmpty(), "Rolled: " + result);
+                    System.out.println(result);
+                    assertFalse(result.isEmpty());
 
-                    int roll = Integer.parseInt(result);
-                    int min = 1;
-                    int max = Integer.parseInt(dice.substring(dice.indexOf("d") + 1));
+                    String regex = outputRegexList.get(inputList.indexOf(dice));
+                    Pattern fullPattern = Pattern.compile(regex);
+                    Matcher fullMatcher = fullPattern.matcher(result);
+                    assertTrue(fullMatcher.find());
 
-                    if (max >= min) {
-                        System.out.println(min + " <= " + roll + " <= " + max);
-                        assertTrue(roll >= min && roll <= max, min + " <= " + roll + " <= " + max);
+                    if (fullMatcher.groupCount() > 1) {
+                        int matchOne = Integer.parseInt(fullMatcher.group(1));
+                        int max = Integer.parseInt(dice.substring(1));
+                        assertTrue(1 <= matchOne);
+                        assertTrue(matchOne <= max);
+                        int matchTwo = Integer.parseInt(fullMatcher.group(2));
+                        assertTrue(1 <= matchTwo);
+                        assertTrue(matchTwo <= max);
                     } else {
-                        System.out.println(max + " is not greater than or equal to " + min);
-                        assertTrue(roll == 0);
+                        assertEquals(regex, result);
                     }
                 }
             ));
-
-        return rollNumberStream;
     }
 }
